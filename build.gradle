@@ -1,0 +1,73 @@
+buildscript {
+
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "net.serenity-bdd:serenity-gradle-plugin:3.4.2"
+        classpath "net.serenity-bdd:serenity-single-page-report:3.4.2"
+    }
+}
+
+plugins {
+    id "net.serenity-bdd.serenity-gradle-plugin" version "3.4.2"
+    id 'java'
+}
+
+defaultTasks 'clear', 'test', 'aggregate'
+group 'com.demoblaze'
+version '1.0-SNAPSHOT'
+
+compileJava.options.encoding = "UTF-8"
+compileTestJava.options.encoding = "UTF-8"
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    slf4jVersion = '1.7.7'
+    SERENITY_VERSION = '4.1.14'
+    serenityCucumberVersion = '4.1.14'
+    junitVersion = '4.13.2'
+    assertJVersion = '3.25.3'
+    logbackVersion = '1.5.3'
+}
+
+dependencies {
+
+    implementation "ch.qos.logback:logback-classic:${logbackVersion}"
+    implementation "net.serenity-bdd:serenity-core:${SERENITY_VERSION}"
+    implementation "net.serenity-bdd:serenity-junit:${SERENITY_VERSION}"
+    implementation "net.serenity-bdd:serenity-junit5:${SERENITY_VERSION}"
+    implementation "net.serenity-bdd:serenity-screenplay:${SERENITY_VERSION}"
+    implementation "net.serenity-bdd:serenity-screenplay-webdriver:${SERENITY_VERSION}"
+    implementation "net.serenity-bdd:serenity-ensure:${SERENITY_VERSION}"
+    implementation "net.serenity-bdd:serenity-cucumber:${SERENITY_VERSION}"
+    testImplementation "net.serenity-bdd:serenity-saucelabs:${SERENITY_VERSION}"
+    implementation "junit:junit:${junitVersion}"
+    implementation "org.junit.platform:junit-platform-launcher:1.8.2"
+    implementation "org.junit.jupiter:junit-jupiter-engine:5.8.2"
+    implementation "org.junit.vintage:junit-vintage-engine:5.8.2"
+    implementation "org.assertj:assertj-core:${assertJVersion}"
+    testImplementation("io.github.bonigarcia:webdrivermanager:5.8.0")
+    implementation group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '4.9.1'
+    implementation group: 'org.apache.poi', name: 'poi-ooxml', version: '5.2.3'
+
+}
+
+test {
+    useJUnitPlatform()
+}
+
+serenity{
+    testRoot="com.example.pruebachoucair.runners"
+    requirementsBaseDir=["src/test/resources/features"]
+    reports=["single-page-html"]
+}
+
+gradle.startParameter.continueOnFailure = true
+test.finalizedBy(aggregate)
